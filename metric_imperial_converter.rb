@@ -1,7 +1,9 @@
-APP_WIDTH = 250
-APP_HEIGHT = 300
-BUTTON_WIDTH = 80
+CALC_WIDTH = 160
+BUTTON_WIDTH = CALC_WIDTH/2
 WINDOW_MARGIN = 10
+APP_WIDTH = CALC_WIDTH + WINDOW_MARGIN*2
+APP_HEIGHT = CALC_WIDTH*1.4
+LABEL_SIZE = 10
 
 =begin
 class Converter < Shoes
@@ -11,14 +13,39 @@ end
 
 Shoes.app :width => APP_WIDTH, :height => APP_HEIGHT do
 
-  flow(margin: 10, width: APP_WIDTH) do
-    @calc_box = edit_line width: 230
+  flow(margin: WINDOW_MARGIN, margin_bottom: 0) do
+    stack width: BUTTON_WIDTH do
+      para strong("Input:"), :size => LABEL_SIZE
+    end
+    stack width: BUTTON_WIDTH do
+      para strong("Result:"), :size => LABEL_SIZE
+    end
   end
 
-  flow(margin: 10) do
+  flow(margin: WINDOW_MARGIN, margin_top: 0, margin_bottom: WINDOW_MARGIN/2, width: APP_WIDTH) do
+    @calc = edit_line :width => BUTTON_WIDTH
+    @result = edit_line :width => BUTTON_WIDTH
+  end
+
+  flow(margin: WINDOW_MARGIN, margin_top: 0) do
     @kg_to_lb = button "kg > lb", :width => BUTTON_WIDTH
     @lb_to_kg = button "lb > kg", :width => BUTTON_WIDTH
+
+    @km_to_mi = button "km > mi", :width => BUTTON_WIDTH
+    @mi_to_km = button "mi > km", :width => BUTTON_WIDTH
+
+    @m_to_ft = button "m > ft", :width => BUTTON_WIDTH
+    @ft_to_m = button "ft > m", :width => BUTTON_WIDTH
   end
+  
+  flow(margin: WINDOW_MARGIN, margin_top: WINDOW_MARGIN/2) do
+    para strong("Decimals: "), :align => "center", :size => LABEL_SIZE
+    @decimals = edit_line :width => BUTTON_WIDTH/2, :right => 0
+    @decimals.text = "2"
+  end
+  
+end
+  
   
 =begin
   stack(margin: 10) do
@@ -43,8 +70,6 @@ Shoes.app :width => APP_WIDTH, :height => APP_HEIGHT do
   end
 =end
 
-
-end
 
 
 =begin
