@@ -5,6 +5,66 @@ APP_WIDTH = CALC_WIDTH + WINDOW_MARGIN*2
 APP_HEIGHT = CALC_WIDTH*1.6
 LABEL_SIZE = 10
 
+KG_TO_LB = 2.20462
+KM_TO_MI = 0.620137
+M_TO_FT = 3.28084
+
+KG = "kg"
+KM = "km"
+M = "m"
+LB = "lb"
+MI = "mi"
+FT = "ft"
+
+
+def convert_to_imperial(figure, unit, decimal="0")
+  return (figure.to_f*conversion_value(unit)).round(2)
+=begin
+  return (figure.to_f*conversion_value(unit)).round(decimal.to_i)
+=end
+end
+  
+def convert_to_metric(figure, unit, decimal=0)
+  return (figure.to_f/conversion_value(unit)).round(decimal.to_i)
+end
+
+def convert_downwards(figure, unit)
+  case unit
+  when KM
+    return figure*M_IN_KM
+  when MI
+    return figure*FT_IN_MI
+  else
+    puts '"{#unit}" cannot be converted downwards.'
+    return 0
+  end
+end
+
+def convert_upwards(figure, unit)
+  case unit
+  when M
+    return figure/M_IN_KM
+  when FT
+    return figure/FT_IN_MI
+  else
+    puts 'Error: "{#unit}" cannot be converted upwards.'
+    return 0
+  end
+end
+
+def conversion_value(unit)
+  case unit
+  when KG, LB
+    return KG_TO_LB
+  when KM, MI
+    return KM_TO_MI
+  when M, FT
+    return M_TO_FT
+  else
+    puts 'Error: "#{unit}" cannot be converted.'
+    return 0
+  end
+end
 
 
 Shoes.app :width => APP_WIDTH, :height => APP_HEIGHT do
@@ -25,6 +85,8 @@ Shoes.app :width => APP_WIDTH, :height => APP_HEIGHT do
 
   flow(margin: WINDOW_MARGIN, margin_top: 0) do
     @kg_to_lb = button "kg > lb", :width => BUTTON_WIDTH
+    @kg_to_lb.click { @result.text = convert_to_imperial(@calc.text, KG, @decimals) }
+
     @lb_to_kg = button "lb > kg", :width => BUTTON_WIDTH
 
     @km_to_mi = button "km > mi", :width => BUTTON_WIDTH
@@ -38,12 +100,25 @@ Shoes.app :width => APP_WIDTH, :height => APP_HEIGHT do
     stack do
       flow do
         @decimals = edit_line :width => BUTTON_WIDTH/2
+        @decimals.text = "2"
         para "decimal points"
       end
       flow { check; para "copy to clipboard"}
     end
   end
   
+
+  
+end
+
+=begin
+      @result.text = convert_to_imperial(@calc.text, KG, @decimals)
+=end
+=begin
+      return (figure.to_f*conversion_value(unit)).round(decimals.to_i)
+=end
+
+
 =begin
   flow(margin: WINDOW_MARGIN, margin_top: WINDOW_MARGIN/2) do
     para strong("Decimals: "), :align => "center", :size => LABEL_SIZE
@@ -51,8 +126,8 @@ Shoes.app :width => APP_WIDTH, :height => APP_HEIGHT do
     @decimals.text = "2"
   end
 =end
-end
-  
+
+
   
 =begin
   stack(margin: 10) do
