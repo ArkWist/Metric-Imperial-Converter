@@ -1,3 +1,8 @@
+=begin ===========================================
+// SI-Calc v1.0
+// -- Daniel Lilley (ArkWist)
+=end
+
 CALC_WIDTH = 160
 BUTTON_WIDTH = CALC_WIDTH/2
 WINDOW_MARGIN = 10
@@ -55,7 +60,7 @@ def conversion_value(unit)
   end
 end
 
-Shoes.app :width => APP_WIDTH, :height => APP_HEIGHT, :title => "SI Calc" do
+Shoes.app :width => APP_WIDTH, :height => APP_HEIGHT, :title => "SI-Calc" do
 
   flow(margin: WINDOW_MARGIN, margin_bottom: 0) do
     stack width: BUTTON_WIDTH do
