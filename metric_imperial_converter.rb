@@ -18,13 +18,10 @@ FT = "ft"
 
 
 def convert_to_imperial(figure, unit, decimal="0")
-  return (figure.to_f*conversion_value(unit)).round(2)
-=begin
   return (figure.to_f*conversion_value(unit)).round(decimal.to_i)
-=end
 end
   
-def convert_to_metric(figure, unit, decimal=0)
+def convert_to_metric(figure, unit, decimal="0")
   return (figure.to_f/conversion_value(unit)).round(decimal.to_i)
 end
 
@@ -85,7 +82,6 @@ Shoes.app :width => APP_WIDTH, :height => APP_HEIGHT do
 
   flow(margin: WINDOW_MARGIN, margin_top: 0) do
     @kg_to_lb = button "kg > lb", :width => BUTTON_WIDTH
-    @kg_to_lb.click { @result.text = convert_to_imperial(@calc.text, KG, @decimals) }
 
     @lb_to_kg = button "lb > kg", :width => BUTTON_WIDTH
 
@@ -107,7 +103,7 @@ Shoes.app :width => APP_WIDTH, :height => APP_HEIGHT do
     end
   end
   
-
+  @kg_to_lb.click { @result.text = convert_to_imperial(@calc.text, KG, @decimals.text) }
   
 end
 
