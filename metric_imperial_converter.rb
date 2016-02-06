@@ -99,12 +99,19 @@ Shoes.app :width => APP_WIDTH, :height => APP_HEIGHT do
         @decimals.text = "2"
         para "decimal points"
       end
-      flow { check; para "copy to clipboard"}
+      flow do
+        @autocopy = check
+        para "auto copy result"
+      end
     end
   end
   
-  @kg_to_lb.click { @result.text = convert_to_imperial(@calc.text, KG, @decimals.text) }
+  copy_to_clipboard = lambda { app.clipboard = @result.text.to_s }
   
+  @kg_to_lb.click do
+    @result.text = convert_to_imperial(@calc.text, KG, @decimals.text)
+    copy_to_clipboard.call if @autocopy.checked?
+  end
 end
 
 =begin
