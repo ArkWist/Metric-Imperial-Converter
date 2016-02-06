@@ -9,17 +9,6 @@ KG_TO_LB = 2.20462
 KM_TO_MI = 0.620137
 M_TO_FT = 3.28084
 
-:kg, :km, :m, ;lb, :miles, :ft
-
-
-KG = "kg"
-KM = "km"
-M = "m"
-LB = "lb"
-MI = "mi"
-FT = "ft"
-
-
 def convert_to_imperial(figure, unit, decimal="0")
   return (figure.to_f*conversion_value(unit)).round(decimal.to_i)
 end
@@ -30,43 +19,43 @@ end
 
 def convert_downwards(figure, unit)
   case unit
-  when KM
+  when :km
     return figure*M_IN_KM
-  when MI
+  when :miles
     return figure*FT_IN_MI
   else
-    puts '"{#unit}" cannot be converted downwards.'
+    puts '"#{unit.to_s.capitalize!}" cannot be converted downwards.'
     return 0
   end
 end
 
 def convert_upwards(figure, unit)
   case unit
-  when M
+  when :m
     return figure/M_IN_KM
-  when FT
+  when :ft
     return figure/FT_IN_MI
   else
-    puts 'Error: "{#unit}" cannot be converted upwards.'
+    puts 'Error: "#{unit.to_s.capitalize!}" cannot be converted upwards.'
     return 0
   end
 end
 
 def conversion_value(unit)
   case unit
-  when KG, LB
+  when :kg, :lb
     return KG_TO_LB
-  when KM, MI
+  when :km, :miles
     return KM_TO_MI
-  when M, FT
+  when :m, :ft
     return M_TO_FT
   else
-    puts 'Error: "#{unit}" cannot be converted.'
+    puts 'Error: "#{unit.to_s.capitalize!}" cannot be converted.'
     return 0
   end
 end
 
-Shoes.app :width => APP_WIDTH, :height => APP_HEIGHT do
+Shoes.app :width => APP_WIDTH, :height => APP_HEIGHT, :title => "SI Calc" do
 
   flow(margin: WINDOW_MARGIN, margin_bottom: 0) do
     stack width: BUTTON_WIDTH do
@@ -98,11 +87,11 @@ Shoes.app :width => APP_WIDTH, :height => APP_HEIGHT do
       flow do
         @decimals = edit_line :width => BUTTON_WIDTH/2
         @decimals.text = "2"
-        para "decimal points"
+        para "decimal points", :size => LABEL_SIZE+2
       end
       flow do
         @autocopy = check
-        para "auto copy result"
+        para "auto copy result", :size => LABEL_SIZE+2
       end
     end
   end
@@ -110,29 +99,29 @@ Shoes.app :width => APP_WIDTH, :height => APP_HEIGHT do
   copy_to_clipboard = lambda { app.clipboard = @result.text.to_s }
   
   @kg_to_lb.click do
-    @result.text = convert_to_imperial(@calc.text, KG, @decimals.text)
+    @result.text = convert_to_imperial(@calc.text, :kg, @decimals.text)
     copy_to_clipboard.call if @autocopy.checked?
   end
   @lb_to_kg.click do
-    @result.text = convert_to_metric(@calc.text, LB, @decimals.text)
+    @result.text = convert_to_metric(@calc.text, :lb, @decimals.text)
     copy_to_clipboard.call if @autocopy.checked?
   end
   
   @km_to_mi.click do
-    @result.text = convert_to_imperial(@calc.text, KM, @decimals.text)
+    @result.text = convert_to_imperial(@calc.text, :km, @decimals.text)
     copy_to_clipboard.call if @autocopy.checked?
   end
   @mi_to_km.click do
-    @result.text = convert_to_metric(@calc.text, MI, @decimals.text)
+    @result.text = convert_to_metric(@calc.text, :miles, @decimals.text)
     copy_to_clipboard.call if @autocopy.checked?
   end
   
   @m_to_ft.click do
-    @result.text = convert_to_imperial(@calc.text, M, @decimals.text)
+    @result.text = convert_to_imperial(@calc.text, :m, @decimals.text)
     copy_to_clipboard.call if @autocopy.checked?
   end
   @ft_to_m.click do
-    @result.text = convert_to_metric(@calc.text, FT, @decimals.text)
+    @result.text = convert_to_metric(@calc.text, :ft, @decimals.text)
     copy_to_clipboard.call if @autocopy.checked?
   end
   
