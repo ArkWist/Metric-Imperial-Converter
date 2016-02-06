@@ -2,13 +2,9 @@ CALC_WIDTH = 160
 BUTTON_WIDTH = CALC_WIDTH/2
 WINDOW_MARGIN = 10
 APP_WIDTH = CALC_WIDTH + WINDOW_MARGIN*2
-APP_HEIGHT = CALC_WIDTH*1.4
+APP_HEIGHT = CALC_WIDTH*1.6
 LABEL_SIZE = 10
 
-=begin
-class Converter < Shoes
-end
-=end
 
 
 Shoes.app :width => APP_WIDTH, :height => APP_HEIGHT do
@@ -39,11 +35,22 @@ Shoes.app :width => APP_WIDTH, :height => APP_HEIGHT do
   end
   
   flow(margin: WINDOW_MARGIN, margin_top: WINDOW_MARGIN/2) do
+    stack do
+      flow do
+        @decimals = edit_line :width => BUTTON_WIDTH/2
+        para "decimal points"
+      end
+      flow { check; para "copy to clipboard"}
+    end
+  end
+  
+=begin
+  flow(margin: WINDOW_MARGIN, margin_top: WINDOW_MARGIN/2) do
     para strong("Decimals: "), :align => "center", :size => LABEL_SIZE
     @decimals = edit_line :width => BUTTON_WIDTH/2, :right => 0
     @decimals.text = "2"
   end
-  
+=end
 end
   
   
