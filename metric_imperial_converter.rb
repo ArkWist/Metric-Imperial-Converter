@@ -1,6 +1,6 @@
 =begin ===========================================
-// SI-Calc v1.0
-// -- Daniel Lilley (ArkWist)
+// Title:  SI-Calc v1.1
+// Author: Daniel Lilley (github.com/ArkWist)
 =end
 
 CALC_WIDTH = 160
@@ -17,9 +17,19 @@ M_TO_FT = 3.28084
 def convert_to_imperial(figure, unit, decimal="0")
   return (figure.to_f*conversion_value(unit)).round(decimal.to_i)
 end
-  
 def convert_to_metric(figure, unit, decimal="0")
   return (figure.to_f/conversion_value(unit)).round(decimal.to_i)
+end
+
+def convert_pace_to_imperial(time, unit)
+  seconds = split_time(time)
+  seconds = convert_to_imperial(seconds, unit)
+  return join_time(seconds)
+end
+def convert_pace_to_metric(time, unit)
+  seconds = split_time(time)
+  seconds = convert_to_metric(seconds, unit)
+  return join_time(seconds)
 end
 
 def convert_downwards(figure, unit)
@@ -33,7 +43,6 @@ def convert_downwards(figure, unit)
     return 0
   end
 end
-
 def convert_upwards(figure, unit)
   case unit
   when :m
@@ -58,6 +67,38 @@ def conversion_value(unit)
     puts 'Error: "#{unit.to_s.capitalize!}" cannot be converted.'
     return 0
   end
+end
+
+def split_time(time)
+  time = time.split(":").to_i.reverse!
+  seconds = 0
+  time.each_with_index do |value, i|
+    if i > 2
+      puts "Error: Too many units of time."
+      return 0
+    end
+    seconds += value * 60**i
+  end
+  return seconds
+end
+def join_time(seconds)
+  seconds.round!(0).to_i
+  hours = seconds/3600
+  seconds -= hours
+  minutes = seconds/60
+  seconds -= minutes
+  return "#{time_pad(hours, true)}:#{time_pad(minutes)}:#{time_pad(seconds)}"
+end
+def time_pad(value, colon=false)
+  if value >= 10
+    time = value.to_s
+  elsif value >= 1
+    time = "0#{value.to_s}"
+  else
+    time = "00"
+  end
+  if colon { time += ":" }
+  return time
 end
 
 Shoes.app :width => APP_WIDTH, :height => APP_HEIGHT, :title => "SI-Calc" do
@@ -85,6 +126,9 @@ Shoes.app :width => APP_WIDTH, :height => APP_HEIGHT, :title => "SI-Calc" do
 
     @m_to_ft = button "m > ft", :width => BUTTON_WIDTH
     @ft_to_m = button "ft > m", :width => BUTTON_WIDTH
+    
+    @pace_km_to_mi = button "t/ km > mi", :width => BUTTON_WIDTH
+    @pace_mi_to_km = button "t/ mi > km", :width => BUTTON_WIDTH
   end
   
   flow(margin: WINDOW_MARGIN, margin_top: WINDOW_MARGIN/2) do
@@ -128,6 +172,15 @@ Shoes.app :width => APP_WIDTH, :height => APP_HEIGHT, :title => "SI-Calc" do
   @ft_to_m.click do
     @result.text = convert_to_metric(@calc.text, :ft, @decimals.text)
     copy_to_clipboard.call if @autocopy.checked?
+  end
+  
+  @pace_km_to_mi.click do
+    @result.text = convert_pace_to_imperial(@calc.text, :km, @decimals.text)
+    copy_to_clipboard call if @autocopy.checked?
+  end
+  @pace_mi_to_km.click do
+    @result.text = convert_pace_to_metric(@calc.text, :miles, @decimals.text)
+    copy_to_clipboard call if @autocopy.checked?
   end
   
 end
