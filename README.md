@@ -1,5 +1,5 @@
 # SI-Calc
---------------------------------------------------------------------------------
+
 A simple calculator for converting between metric and imperial measures useful
 for gauging running stats and estimating calories. My wife's fitness watch
 records her running statistics in metric, but a lot of the calculators she 
